@@ -1,26 +1,24 @@
-# Use an official Python runtime as a parent image
+# Use standard Python 3.11
 FROM python:3.11-slim
-
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
 
 # Set work directory
 WORKDIR /app
 
-# Install system dependencies
+# Install base system tools
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
-    software-properties-common \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy the project files into the container
+# Copy your code into the container
 COPY . /app/
 
-# Install the application dependencies
+# Install the Python requirements
 RUN pip install --no-cache-dir .
 
-# Command to run the application
+# Force the installation of the headless browser AND all its required system dependencies
+RUN playwright install --with-deps chromium
+
+# Wake Buzz up
 CMD ["hermes", "gateway"]
