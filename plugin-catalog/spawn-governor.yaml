@@ -1,0 +1,19 @@
+name: spawn-governor
+repo: https://github.com/Buzz-Hive-Life/spawn-governor
+sha: 1639e04a337842d816de87d5a3fde4115f8a0dde
+title: Spawn Governor
+description: "Admission control for `delegate_task`. Prices each subagent spawn before it starts, against the spend envelope you set: a spawn that would breach it is refused, with the arithmetic — the forecast, what is already spent, and the headroom left — and `on_breach: downgrade` takes the first admissible cheaper rung of a ladder you order instead of refusing at all. A `post_api_request` hook reconciles each physical provider call against the usage the provider actually reported, and that ratio calibrates every later forecast, so the gate sharpens with use rather than repeating one guess. Refusals say *forecast*; the ledger says *actual*; an armed envelope never passes a spawn that priced at zero. A delegation provider (`delegation.backend: spawn_governor`) plus one hook — core keeps the whole subagent lifecycle, and a refused task is refused alone, its siblings still run. Needs Hermes 0.22.5 or newer, the first release with pluggable delegation providers.\n\nDisclosures\n- Network: none. No network or model calls of its own; every price is local arithmetic over your config.\n- Local files: writes one JSONL ledger at `$HERMES_HOME/logs/spawn-governor-ledger.jsonl` — one line per reservation, refusal, downgrade and reconciled provider call. Reads its own `delegation.backends.spawn_governor` block from the active profile's config.yaml, once.\n- Credentials: none read and none stored. There is no `requires_env` at all.\n- Shell commands: none. Pricing a spawn is arithmetic; refusing one raises a delegation route error."
+maintainer: Buzz-Hive-Life
+tier: community
+category: tools
+requires_hermes: ">=0.22.5"
+version: "0.1.0"
+docs_url: https://github.com/Buzz-Hive-Life/spawn-governor#readme
+readme: true
+platforms: []
+capabilities:
+  provides_tools: []
+  provides_hooks:
+    - post_api_request
+  provides_middleware: []
+  requires_env: []
